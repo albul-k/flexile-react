@@ -1,10 +1,10 @@
 name: Docker Image CI
+env:
+  RELEASE_IMAGE: $GITHUB_REPOSITORY:latest
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ main, deploy-ci ]
 
 jobs:
 
@@ -27,3 +27,14 @@ jobs:
       with:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/flexile-react:latest
+
+  deploy:
+    needs: build
+    name: Deploy the Docker image
+    runs-on: self-hosted
+    steps:
+    - name: Log in to Docker then pull and run
+      run: |
+        docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}" $GITHUB_REPOSITORY
+        docker pull ${{ RELEASE_IMAGE }}
+        docker run -p 3000:3000 -d ${{ secrets.DOCKER_USERNAME }}/${{ RELEASE_IMAGE }}
