@@ -30,7 +30,7 @@ jobs:
 
   deploy:
     needs: build
-    name: Deploy the Docker image
+    name: Deploy the Docker image to host
     runs-on: self-hosted
     steps:
     - name: Log in to Docker then pull and run
