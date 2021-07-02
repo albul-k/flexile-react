@@ -39,7 +39,6 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Cleanup static directory
       - shell: bash
         run: |
           rm -r /usr/share/nginx/html
