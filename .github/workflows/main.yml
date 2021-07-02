@@ -39,10 +39,12 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Download math result for job 1
+      - name: Cleanup static directory
+      - shell: bash
+        run: |
+          rm -r /usr/share/nginx/html
+      - name: Download build
         uses: actions/download-artifact@v2
         with:
           name: react-flexile-build
-      - shell: bash
-        run: |
-          echo "Done!"
+          path: /usr/share/nginx/html
