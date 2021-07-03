@@ -1,0 +1,49 @@
+name: Build & Deploy CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 15.x, 16.x]
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2.2.0
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: yarn install
+      - name: Test
+        run: yarn run test
+        env:
+          CI: true
+      - name: Generate build
+        run: yarn run build
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: react-flexile-build
+          path: build
+          retention-days: 5
+
+  deploy:
+    name: Deploy to server
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - shell: bash
+        run: |
+          rm -rfv /var/www/html/*
+      - name: Download build
+        uses: actions/download-artifact@v2
+        with:
+          name: react-flexile-build
+          path: /var/www/html
