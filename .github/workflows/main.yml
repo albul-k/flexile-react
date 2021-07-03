@@ -41,9 +41,9 @@ jobs:
     steps:
       - shell: bash
         run: |
-          rm -r /var/www/flexile/html
+          rm -r /var/www/html
       - name: Download build
         uses: actions/download-artifact@v2
         with:
           name: react-flexile-build
-          path: /var/www/flexile/html
+          path: /var/www/html
