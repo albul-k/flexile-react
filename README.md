@@ -1,5 +1,5 @@
 # Flexile ERP project
 
-[![docker-ci](https://github.com/albul-k/flexile-react/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/albul-k/flexile-react/actions/workflows/docker-image.yml)
+[![docker-ci](https://github.com/albul-k/flexile-react/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/albul-k/flexile-react/actions/workflows/main.yml)
 
 ## React frontend
