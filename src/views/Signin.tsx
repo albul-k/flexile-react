@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from './Copyright';
+import i18next from "i18next";
 
 
 const styles = (theme: Theme) =>
@@ -38,6 +40,7 @@ export interface ContentProps extends WithStyles<typeof styles> { }
 
 function SignIn(props: ContentProps) {
   const { classes } = props;
+  let history = useHistory();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -55,10 +58,10 @@ function SignIn(props: ContentProps) {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label={i18next.t('Login')}
+            name="login"
+            autoComplete="login"
             autoFocus
           />
           <TextField
@@ -67,7 +70,7 @@ function SignIn(props: ContentProps) {
             required
             fullWidth
             name="password"
-            label="Password"
+            label={i18next.t('Password')}
             type="password"
             id="password"
             autoComplete="current-password"
@@ -82,7 +85,7 @@ function SignIn(props: ContentProps) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={() => { alert('clicked') }}
+            onClick={() => { history.push('/dashboard') }}
           >
             Sign In
           </Button>

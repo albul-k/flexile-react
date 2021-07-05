@@ -153,9 +153,9 @@ const styles = createStyles({
   },
 });
 
-export interface PaperbaseProps extends WithStyles<typeof styles> {}
+export interface DashboardProps extends WithStyles<typeof styles> { }
 
-function Paperbase(props: PaperbaseProps) {
+function Dashboard(props: DashboardProps) {
   const { classes } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -194,4 +194,4 @@ function Paperbase(props: PaperbaseProps) {
   );
 }
 
-export default withStyles(styles)(Paperbase);
+export default withStyles(styles)(Dashboard);
