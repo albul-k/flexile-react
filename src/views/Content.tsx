@@ -8,11 +8,11 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       maxWidth: 936,
@@ -34,12 +34,11 @@ const styles = (theme: Theme) =>
     contentWrapper: {
       margin: '40px 16px',
     },
-  });
+  }));
 
-export interface ContentProps extends WithStyles<typeof styles> { }
 
-function Content(props: ContentProps) {
-  const { classes } = props;
+function Content() {
+  const classes = useStyles();
 
   return (
     <Paper className={classes.paper}>
@@ -81,4 +80,4 @@ function Content(props: ContentProps) {
   );
 }
 
-export default withStyles(styles)(Content);
+export default Content;
