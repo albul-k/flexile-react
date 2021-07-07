@@ -44,11 +44,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function SignIn({ setToken }: { setToken: any }) {
   const classes = useStyles();
-  const [username, setUserName] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUserName] = useState('test');
+  const [password, setPassword] = useState('test123');
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    setToken({ 'token': 'test123'});
+    console.log('user', username)
+    setToken({ 'token': password });
   };
   const handleUserName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserName(event.target.value);
