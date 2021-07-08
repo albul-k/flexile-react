@@ -32,12 +32,16 @@ jobs:
           CI: true
       - name: Generate build
         run: yarn run build
-      - name: Upload a Build Artifact
+      - name: Zip build
+        uses: thedoctor0/zip-release@master
+        with:
+          filename: react-flexile-build.zip
+          path: build
+      - name: Upload build zip artifact
         uses: actions/upload-artifact@v2.2.4
         with:
           name: react-flexile-build.zip
           path: react-flexile-build.zip
-          retention-days: 5
 
   # deploy-to-server:
   #   name: Deploy to server
@@ -60,7 +64,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        run: docker build . --file server/Dockerfile --tag $GITHUB_REPOSITORY
+        run: docker build ./server --file Dockerfile --tag $GITHUB_REPOSITORY
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
