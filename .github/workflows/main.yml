@@ -2,7 +2,7 @@ name: Build & Deploy CI
 
 on:
   push:
-    branches: [main, docker-ci, test]
+    branches: [main, docker-ci]
     paths:
       - '**.js'
       - '**.ts'
