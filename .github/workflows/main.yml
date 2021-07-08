@@ -8,6 +8,7 @@ on:
       - '**.ts'
       - '**.tsx'
       - '**.css'
+      - '**.yml'
 
 jobs:
   build:
