@@ -65,7 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        run: docker build --file server/Dockerfile --tag $GITHUB_REPOSITORY
+        run: docker build . --file server/Dockerfile --tag $GITHUB_REPOSITORY
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -76,3 +76,17 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/flexile-react:latest
+
+  # deploy-docker-to-server:
+  #   name: Deploy Docker image to server
+  #   needs: build-docker
+  #   runs-on: self-hosted
+  #   steps:
+  #     - shell: bash
+  #       run: |
+  #         rm -rfv /var/www/html/*
+  #     - name: Download build
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: react-flexile-build
+  #         path: /var/www/html

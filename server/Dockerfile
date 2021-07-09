@@ -4,10 +4,12 @@ LABEL "maintainer"="Konstantin Albul"
 
 WORKDIR /usr/src/flexile-react
 
-COPY build/ build/
+COPY src/ src/
+COPY public/ public/
+COPY yarn.lock package-lock.json package.json ./
+COPY server/app.js .
 
 RUN yarn install
-
 RUN yarn run build
 
 EXPOSE 8080
