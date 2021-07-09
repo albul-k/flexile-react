@@ -10,6 +10,10 @@ on:
       - '**.css'
       - '**.yml'
 
+env:
+  REGISTRY_IMAGE: flexile-react
+  IMAGE_TAG: latest
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -99,21 +103,25 @@ jobs:
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/flexile-react:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}:${{ env.IMAGE_TAG }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
-  # deploy-docker-to-server:
-  #   name: Deploy Docker image to server
-  #   needs: build-docker
-  #   runs-on: self-hosted
-  #   steps:
-  #     - name: Build the Docker image
-  #       run: |
-  #         test=$(docker ps -a -q -f "ancestor=albulk/flexile-react"); echo $test
-  #         if [[ "$test" != "" ]]; then docker stop $(docker ps -a -q -f "ancestor=albulk/flexile-react"); docker rm $(docker ps -a -q -f "ancestor=albulk/flexile-react"); docker rmi -f $(docker images -f dangling=true -q); fi;
-  #         docker pull ${{ secrets.DOCKER_USERNAME }}/flexile-react:latest
-  #         docker run -p 8080:8080 -d albulk/flexile-react:latest
+  deploy-docker-to-server:
+    name: Deploy Docker image to server
+    needs: build-docker
+    runs-on: self-hosted
+    steps:
+      - name: Build the Docker image
+        run: |
+          test=$(docker ps -a -q -f "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}"); echo $test
+          if [[ "$test" != "" ]]; then 
+            docker stop $(docker ps -a -q -f "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}");
+            docker rm $(docker ps -a -q -f "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}");
+            docker rmi -f $(docker images -q -f reference='${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}' dangling=true);
+          fi;
+          docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}:${{ env.IMAGE_TAG }}
+          docker run -p 8080:8080 -d ${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}:${{ env.IMAGE_TAG }}
