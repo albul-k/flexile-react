@@ -1,15 +1,17 @@
-FROM node:latest
+FROM node:16.4.2-alpine
 LABEL "repository"="https://github.com/albul-k/flexile-react"
 LABEL "maintainer"="Konstantin Albul"
 
-EXPOSE 3000
-
 WORKDIR /usr/src/flexile-react
 
-COPY . .
+COPY src/ src/
+COPY public/ public/
+COPY yarn.lock package-lock.json package.json tsconfig.json ./
+COPY server/app.js .
 
 RUN yarn install
-
 RUN yarn run build
 
-CMD ["node","server.js"]
+EXPOSE 8080
+
+CMD ["node","app.js"]
