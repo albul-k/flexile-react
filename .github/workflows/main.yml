@@ -2,7 +2,7 @@ name: Build & Deploy CI
 
 on:
   push:
-    branches: [main, docker-ci]
+    branches: [main]
     paths:
       - '**.js'
       - '**.ts'
@@ -54,20 +54,6 @@ jobs:
           name: react-flexile-build.zip
           path: react-flexile-build.zip
 
-  # deploy-to-server:
-  #   name: Deploy to server
-  #   needs: build
-  #   runs-on: self-hosted
-  #   steps:
-  #     - shell: bash
-  #       run: |
-  #         rm -rfv /var/www/html/*
-  #     - name: Download build
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: react-flexile-build
-  #         path: /var/www/html
-
   build-docker:
     name: Build the Docker image
     needs: build
@@ -109,19 +95,3 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-
-  deploy-docker-to-server:
-    name: Deploy Docker image to server
-    needs: build-docker
-    runs-on: self-hosted
-    steps:
-      - name: Build the Docker image
-        run: |
-          test=$(docker ps -a -q -f "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}"); echo $test
-          if [[ "$test" != "" ]]; then 
-            docker stop $(docker ps -a -q -f "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}");
-            docker rm $(docker ps -a -q -f "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}");
-            docker rmi -f $(docker images -q -f reference='${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}' dangling=true);
-          fi;
-          docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}:${{ env.IMAGE_TAG }}
-          docker run -p 8080:8080 -d ${{ secrets.DOCKER_USERNAME }}/${{ env.REGISTRY_IMAGE }}:${{ env.IMAGE_TAG }}
