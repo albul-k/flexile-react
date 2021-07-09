@@ -6,7 +6,7 @@ WORKDIR /usr/src/flexile-react
 
 COPY src/ src/
 COPY public/ public/
-COPY yarn.lock package-lock.json package.json ./
+COPY yarn.lock package-lock.json package.json tsconfig.json ./
 COPY server/app.js .
 
 RUN yarn install

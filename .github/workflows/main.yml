@@ -21,23 +21,29 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2.2.0
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Install dependencies
         run: yarn install
+
       - name: Test
         run: yarn run test
         env:
           CI: true
+
       - name: Generate build
         run: yarn run build
+
       - name: Zip build
         uses: thedoctor0/zip-release@master
         with:
           filename: react-flexile-build.zip
           path: build
+
       - name: Upload build zip artifact
         uses: actions/upload-artifact@v2.2.4
         with:
@@ -63,30 +69,51 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag $GITHUB_REPOSITORY
-      - name: Log in to Docker Hub
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Check Out Repo 
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Push to Docker Hub
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push
+        id: docker_build
         uses: docker/build-push-action@v2
         with:
+          context: ./
+          file: ./Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/flexile-react:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
 
   # deploy-docker-to-server:
   #   name: Deploy Docker image to server
   #   needs: build-docker
   #   runs-on: self-hosted
   #   steps:
-  #     - shell: bash
+  #     - name: Build the Docker image
   #       run: |
-  #         rm -rfv /var/www/html/*
-  #     - name: Download build
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: react-flexile-build
-  #         path: /var/www/html
+  #         test=$(docker ps -a -q -f "ancestor=albulk/flexile-react"); echo $test
+  #         if [[ "$test" != "" ]]; then docker stop $(docker ps -a -q -f "ancestor=albulk/flexile-react"); docker rm $(docker ps -a -q -f "ancestor=albulk/flexile-react"); docker rmi -f $(docker images -f dangling=true -q); fi;
+  #         docker pull ${{ secrets.DOCKER_USERNAME }}/flexile-react:latest
+  #         docker run -p 8080:8080 -d albulk/flexile-react:latest
