@@ -1,8 +1,7 @@
 import {
-  BrowserRouter,
-  Redirect,
-  Route,
+  BrowserRouter as Router,
   Switch,
+  Redirect,
 } from "react-router-dom";
 
 // Material UI
@@ -16,6 +15,9 @@ import { ruRU } from '@material-ui/core/locale';
 import SignIn from './views/Signin';
 import Dashboard from './views/Dashboard';
 
+// Auth
+import { AuthProvider, useAuthContext } from "./utils/auth";
+import { AuthRoute } from "./utils/authRoute";
 import useToken from './utils/useToken';
 // import browserHistory from "./utils/browserHistory";
 
@@ -132,6 +134,7 @@ theme = {
 
 
 function App() {
+  // const context = useAuthContext();
   const { token, setToken } = useToken();
 
   if (!token) {
@@ -140,14 +143,16 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
+      <AuthProvider>
+      <Router>
         <Switch>
-          <Route exact path="/">
+          <AuthRoute exact path="/">
             <Redirect to="/dashboard" />
-          </Route>
-          <Route exact path={'/dashboard'} component={Dashboard} />
+          </AuthRoute>
+          <AuthRoute exact path={'/dashboard'} component={Dashboard} />
         </Switch>
-      </BrowserRouter>
+      </Router>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

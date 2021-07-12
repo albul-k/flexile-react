@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import clsx from 'clsx';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
@@ -15,6 +15,8 @@ import PollIcon from '@material-ui/icons/Poll';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import { Omit } from '@material-ui/types';
 import i18next from "i18next";
+
+import { StateContext } from '../utils/stateProvider';
 
 const categories = [
   {
@@ -81,13 +83,25 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export interface NavigatorProps extends Omit<DrawerProps, 'classes'> { }
 
+interface IClick {
+  event: React.MouseEvent<HTMLDivElement, MouseEvent>;
+  childId: string;
+  route: string;
+}
+
 function Navigator(props: NavigatorProps) {
   const classes = useStyles();
-  const history = useHistory();
   const { ...other } = props;
-  const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, route: string) => {
-    history.push(route);
-  }
+  
+  const {dispatch} = useContext(StateContext);
+  const handleClick = (click: IClick) => {
+    dispatch(
+      {type: 'setTitle', value: click.childId}
+    );
+    dispatch(
+      {type: 'setRoute', value: click.route}
+    );
+  };
 
   return (
     <Drawer variant="permanent" {...other}>
@@ -123,9 +137,9 @@ function Navigator(props: NavigatorProps) {
                 key={childId}
                 button
                 className={clsx(classes.item, active && classes.itemActiveItem)}
-                onClick={(event) => handleClick(event, route)}
+                onClick={(event) => handleClick({ event, childId, route })}
               >
-                {icon?<ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>:''}
+                {icon ? <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon> : ''}
                 <ListItemText
                   classes={{
                     primary: classes.itemPrimary,

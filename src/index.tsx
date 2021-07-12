@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 
 import './i18n';
 import './index.css';
-import App from './App';
+import { StateProvider } from './utils/stateProvider';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <StateProvider />
   </React.StrictMode>,
   document.getElementById('root')
 );

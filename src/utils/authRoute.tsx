@@ -1,11 +1,10 @@
-// import { useAuthContext } from "../modules/context/auth";
-// import {Redirect, Route} from "react-router-dom";
+// import { useAuthContext } from "./auth";
 import { Route } from "react-router-dom";
 
 
-// @ts-ignore
-export const AuthRoute = ({ component: Component, ...rest }) => {
+export const AuthRoute = ({ component: Component, ...rest }: any) => {
   // const { user }: any = useAuthContext();
+  // console.log('user', user)
   return <Route
     {...rest}
     render={

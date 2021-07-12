@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   createStyles,
   makeStyles,
@@ -10,6 +10,8 @@ import Navigator from './Navigator';
 import Content from './Content';
 import Header from './Header';
 import Copyright from './Copyright';
+
+import { StateContext } from '../utils/stateProvider';
 
 
 const drawerWidth = 256;
@@ -43,11 +45,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function Dashboard() {
   const classes = useStyles();
+  const { state } = useContext(StateContext);
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  console.log(state);
 
   return (
     <div className={classes.root}>
