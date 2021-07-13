@@ -8,15 +8,14 @@ import App from "../App";
 
 interface IState {
   title: string,
-  route: string,
   errorList: any[],
 }
 
 interface IActions {
   type: string;
   value?: any;
+  component?: any;
 }
-
 
 interface IStateProps {
   state: IState,
@@ -25,7 +24,6 @@ interface IStateProps {
 
 const initState: IState = {
   title: '',
-  route: '/',
   errorList: [],
 };
 
@@ -39,7 +37,7 @@ const reducer = (state = initState, action: IActions) => {
     case 'setRoute':
       return {
         ...state,
-        route: action.value
+        route: action.value,
       }
     case 'setError':
       const error = state.errorList;

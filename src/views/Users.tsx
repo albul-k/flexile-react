@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }));
 
 
-function Content() {
+function Users() {
   const classes = useStyles();
 
   return (
@@ -80,4 +80,4 @@ function Content() {
   );
 }
 
-export default Content;
+export default Users;

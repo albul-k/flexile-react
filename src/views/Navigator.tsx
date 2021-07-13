@@ -15,6 +15,7 @@ import PollIcon from '@material-ui/icons/Poll';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import { Omit } from '@material-ui/types';
 import i18next from "i18next";
+import Users from './Users';
 
 import { StateContext } from '../utils/stateProvider';
 
@@ -22,19 +23,19 @@ const categories = [
   {
     id: 'Category header #1',
     children: [
-      { id: 'Orders', route: '/dashboard', icon: <AssignmentIcon />, active: true },
-      { id: 'Tab 1', route: '/dashboard', icon: <BookmarkBorderIcon /> },
-      { id: 'Tab 2', route: '/dashboard', icon: <BookmarkBorderIcon /> },
-      { id: 'Tab 3', route: '/dashboard', icon: <BookmarkBorderIcon /> },
-      { id: 'Tab 4', route: '/dashboard', icon: <BookmarkBorderIcon /> },
-      { id: 'Tab 5', route: '/dashboard', icon: <BookmarkBorderIcon /> },
+      { id: 'Orders', route: '/dashboard', component: <Users />, icon: <AssignmentIcon />, active: true },
+      { id: 'Tab 1', route: '/dashboard', component: <Users />, icon: <BookmarkBorderIcon /> },
+      { id: 'Tab 2', route: '/dashboard', component: <Users />, icon: <BookmarkBorderIcon /> },
+      { id: 'Tab 3', route: '/dashboard', component: <Users />, icon: <BookmarkBorderIcon /> },
+      { id: 'Tab 4', route: '/dashboard', component: <Users />, icon: <BookmarkBorderIcon /> },
+      { id: 'Tab 5', route: '/dashboard', component: <Users />, icon: <BookmarkBorderIcon /> },
     ],
   },
   {
     id: 'Category header #2',
     children: [
-      { id: 'Users', route: '/users', icon: <PeopleIcon /> },
-      { id: 'Analytics', route: '/analytics', icon: <PollIcon /> },
+      { id: 'Users', route: '/users', component: <Users />, icon: <PeopleIcon /> },
+      { id: 'Analytics', route: '/analytics', component: <Users />, icon: <PollIcon /> },
     ],
   },
 ];
@@ -87,6 +88,8 @@ interface IClick {
   event: React.MouseEvent<HTMLDivElement, MouseEvent>;
   childId: string;
   route: string;
+  component: any;
+  active?: boolean;
 }
 
 function Navigator(props: NavigatorProps) {
@@ -99,7 +102,7 @@ function Navigator(props: NavigatorProps) {
       {type: 'setTitle', value: click.childId}
     );
     dispatch(
-      {type: 'setRoute', value: click.route}
+      {type: 'setRoute', value: click.route, component: click.component}
     );
   };
 
@@ -132,12 +135,12 @@ function Navigator(props: NavigatorProps) {
                 {i18next.t(id)}
               </ListItemText>
             </ListItem>
-            {children.map(({ id: childId, route, icon, active }) => (
+            {children.map(({ id: childId, route, component, icon, active }) => (
               <ListItem
                 key={childId}
                 button
                 className={clsx(classes.item, active && classes.itemActiveItem)}
-                onClick={(event) => handleClick({ event, childId, route })}
+                onClick={(event) => handleClick({ event, childId, route, component })}
               >
                 {icon ? <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon> : ''}
                 <ListItemText

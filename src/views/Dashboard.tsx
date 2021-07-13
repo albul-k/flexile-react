@@ -1,16 +1,24 @@
 import React, { useState, useContext } from 'react';
 import {
+  Switch,
+  Route,
+} from "react-router-dom";
+
+// Material UI
+import {
   createStyles,
   makeStyles,
   Theme
 } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Hidden from '@material-ui/core/Hidden';
+
+// Components
 import Navigator from './Navigator';
-import Content from './Content';
 import Header from './Header';
 import Copyright from './Copyright';
 
+// Utils
 import { StateContext } from '../utils/stateProvider';
 
 
@@ -45,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function Dashboard() {
   const classes = useStyles();
-  const { state } = useContext(StateContext);
+  
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -72,7 +80,9 @@ function Dashboard() {
       <div className={classes.app}>
         <Header onDrawerToggle={handleDrawerToggle} />
         <main className={classes.main}>
-          <Content />
+          <Switch>
+            <Route exact path={state.route} component={state.component} />
+          </Switch>
         </main>
         <footer className={classes.footer}>
           <Copyright />
