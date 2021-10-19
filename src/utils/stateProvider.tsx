@@ -8,6 +8,7 @@ import App from "../App";
 
 interface IState {
   title: string,
+  route: string,
   errorList: any[],
 }
 
@@ -24,6 +25,7 @@ interface IStateProps {
 
 const initState: IState = {
   title: '',
+  route: '/',
   errorList: [],
 };
 

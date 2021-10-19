@@ -46,8 +46,7 @@ interface HeaderProps extends WithStyles<typeof styles> {
 
 function Header(props: HeaderProps) {
   const { classes, onDrawerToggle } = props;
-
-  const { state } = useContext(StateContext);
+  // const { state } = useContext(StateContext);
 
   return (
     <React.Fragment>
@@ -82,7 +81,7 @@ function Header(props: HeaderProps) {
           </Grid>
         </Toolbar>
       </AppBar>
-      <AppBar
+      {/* <AppBar
         component="div"
         className={classes.secondaryBar}
         color="primary"
@@ -112,7 +111,7 @@ function Header(props: HeaderProps) {
           <Tab textColor="inherit" label="Templates" />
           <Tab textColor="inherit" label="Usage" />
         </Tabs>
-      </AppBar>
+      </AppBar> */}
     </React.Fragment>
   );
 }

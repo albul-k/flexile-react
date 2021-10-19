@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import clsx from 'clsx';
+
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Drawer, { DrawerProps } from '@material-ui/core/Drawer';
@@ -8,14 +9,16 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import { Omit } from '@material-ui/types';
+
+import i18next from "i18next";
+
+// Icons
 import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+// import AssignmentIcon from '@material-ui/icons/Assignment';
 import PollIcon from '@material-ui/icons/Poll';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import { Omit } from '@material-ui/types';
-import i18next from "i18next";
-import Users from './Users';
 
 import { StateContext } from '../utils/stateProvider';
 
@@ -23,19 +26,19 @@ const categories = [
   {
     id: 'Category header #1',
     children: [
-      { id: 'Orders', route: '/dashboard', component: <Users />, icon: <AssignmentIcon />, active: true },
-      { id: 'Tab 1', route: '/dashboard', component: <Users />, icon: <BookmarkBorderIcon /> },
-      { id: 'Tab 2', route: '/dashboard', component: <Users />, icon: <BookmarkBorderIcon /> },
-      { id: 'Tab 3', route: '/dashboard', component: <Users />, icon: <BookmarkBorderIcon /> },
-      { id: 'Tab 4', route: '/dashboard', component: <Users />, icon: <BookmarkBorderIcon /> },
-      { id: 'Tab 5', route: '/dashboard', component: <Users />, icon: <BookmarkBorderIcon /> },
+      { id: 'Main', route: '/main', icon: <HomeIcon />, active: true },
+      { id: 'Tab 1', route: '/', icon: <BookmarkBorderIcon /> },
+      { id: 'Tab 2', route: '/', icon: <BookmarkBorderIcon /> },
+      { id: 'Tab 3', route: '/', icon: <BookmarkBorderIcon /> },
+      { id: 'Tab 4', route: '/', icon: <BookmarkBorderIcon /> },
+      { id: 'Tab 5', route: '/', icon: <BookmarkBorderIcon /> },
     ],
   },
   {
     id: 'Category header #2',
     children: [
-      { id: 'Users', route: '/users', component: <Users />, icon: <PeopleIcon /> },
-      { id: 'Analytics', route: '/analytics', component: <Users />, icon: <PollIcon /> },
+      { id: 'Users', route: '/users', icon: <PeopleIcon /> },
+      { id: 'Analytics', route: '/analytics', icon: <PollIcon /> },
     ],
   },
 ];
@@ -43,8 +46,8 @@ const categories = [
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     categoryHeader: {
-      paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
+      // paddingTop: theme.spacing(2),
+      // paddingBottom: theme.spacing(2),
     },
     categoryHeaderPrimary: {
       color: theme.palette.common.white,
@@ -88,7 +91,6 @@ interface IClick {
   event: React.MouseEvent<HTMLDivElement, MouseEvent>;
   childId: string;
   route: string;
-  component: any;
   active?: boolean;
 }
 
@@ -102,7 +104,7 @@ function Navigator(props: NavigatorProps) {
       {type: 'setTitle', value: click.childId}
     );
     dispatch(
-      {type: 'setRoute', value: click.route, component: click.component}
+      {type: 'setRoute', value: click.route}
     );
   };
 
@@ -111,18 +113,6 @@ function Navigator(props: NavigatorProps) {
       <List disablePadding>
         <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
           Flexile
-        </ListItem>
-        <ListItem className={clsx(classes.item, classes.itemCategory)}>
-          <ListItemIcon className={classes.itemIcon}>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText
-            classes={{
-              primary: classes.itemPrimary,
-            }}
-          >
-            {i18next.t('Main view')}
-          </ListItemText>
         </ListItem>
         {categories.map(({ id, children }) => (
           <React.Fragment key={id}>
@@ -135,12 +125,12 @@ function Navigator(props: NavigatorProps) {
                 {i18next.t(id)}
               </ListItemText>
             </ListItem>
-            {children.map(({ id: childId, route, component, icon, active }) => (
+            {children.map(({ id: childId, route, icon, active }) => (
               <ListItem
                 key={childId}
                 button
                 className={clsx(classes.item, active && classes.itemActiveItem)}
-                onClick={(event) => handleClick({ event, childId, route, component })}
+                onClick={(event) => handleClick({ event, childId, route })}
               >
                 {icon ? <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon> : ''}
                 <ListItemText

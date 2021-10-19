@@ -1,7 +1,7 @@
 import {
   BrowserRouter,
   Switch,
-  Redirect,
+  // Redirect,
   Route,
 } from "react-router-dom";
 
@@ -15,16 +15,10 @@ import {
 } from '@material-ui/core/styles';
 import { ruRU } from '@material-ui/core/locale';
 
-// Icons
-import HomeIcon from '@material-ui/icons/Home';
-import PeopleIcon from '@material-ui/icons/People';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import PollIcon from '@material-ui/icons/Poll';
-
 // Components
-import SignIn from './views/Signin';
-import Dashboard from './views/Dashboard';
+import Main from './views/Main';
 import Users from './views/Users';
+import SignIn from './views/Signin';
 import Navigator from './views/Navigator';
 import Header from './views/Header';
 import Copyright from './views/Copyright';
@@ -38,13 +32,6 @@ import { useContext, useState } from "react";
 import { StateContext } from "./utils/stateProvider";
 // import browserHistory from "./utils/browserHistory";
 
-
-const navItems = [
-  { id: 'Main', route: '/main', component: <Users />, icon: <HomeIcon />, active: true },
-  { id: 'Orders', route: '/orders', component: <Users />, icon: <AssignmentIcon /> },
-  { id: 'Users', route: '/users', component: <Users />, icon: <PeopleIcon /> },
-  { id: 'Analytics', route: '/analytics', component: <Users />, icon: <PollIcon /> },
-];
 
 let theme = createMuiTheme({
   palette: {
@@ -158,6 +145,7 @@ theme = {
 };
 
 const drawerWidth = 256;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -203,7 +191,7 @@ function App() {
             {/* <AuthRoute exact path="/">
             <Redirect to="/flexile/" />
           </AuthRoute> */}
-            <AuthRoute component={Flexile} path={'/flexile/*'} />
+            <AuthRoute component={Flexile} path={'/*'} />
           </Switch>
         </BrowserRouter>
       </AuthProvider>
@@ -221,6 +209,8 @@ export const Flexile = () => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  console.log(state);
 
   return (
     <AuthProvider>
@@ -244,7 +234,8 @@ export const Flexile = () => {
             <Header onDrawerToggle={handleDrawerToggle} />
             <main className={classes.main}>
               <Switch>
-                <Route exact path={state.route} component={state.component} />
+                {state.route === '/users' ? <Route exact path={state.route} component={Users} />
+                : <Route exact path={state.route} component={Users} />}
               </Switch>
             </main>
             <footer className={classes.footer}>
