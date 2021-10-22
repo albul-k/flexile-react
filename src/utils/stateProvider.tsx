@@ -7,15 +7,12 @@ import App from "../App";
 
 
 interface IState {
-  title: string,
-  route: string,
   errorList: any[],
 }
 
 interface IActions {
   type: string;
   value?: any;
-  component?: any;
 }
 
 interface IStateProps {
@@ -24,23 +21,11 @@ interface IStateProps {
 }
 
 const initState: IState = {
-  title: '',
-  route: '/',
   errorList: [],
 };
 
 const reducer = (state = initState, action: IActions) => {
   switch (action.type) {
-    case 'setTitle':
-      return {
-        ...state,
-        title: action.value
-      }
-    case 'setRoute':
-      return {
-        ...state,
-        route: action.value,
-      }
     case 'setError':
       const error = state.errorList;
       if (action.value) {
