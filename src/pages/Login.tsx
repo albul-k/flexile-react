@@ -1,5 +1,5 @@
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-// @ts-ignore
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 import * as Yup from 'yup';
@@ -8,16 +8,18 @@ import {
   Box,
   Button,
   Container,
-  Link,
-  TextField,
-  Typography
+  TextField
 } from '@material-ui/core';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useState } from 'react';
+
+// Localization
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const Login = ({ setToken }: { setToken: any  }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   if (loading) {
     return (
@@ -39,7 +41,7 @@ const Login = ({ setToken }: { setToken: any  }) => {
   return (
     <>
       <Helmet>
-        <title>Login | Flexile</title>
+        <title>{i18next.t('Login | Flexile')}</title>
       </Helmet>
       <Box
         sx={{
@@ -53,12 +55,12 @@ const Login = ({ setToken }: { setToken: any  }) => {
         <Container maxWidth="sm">
           <Formik
             initialValues={{
-              email: 'demo@devias.io',
+              login: 'demo@devias.io',
               password: 'Password123'
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-              password: Yup.string().max(255).required('Password is required')
+              login: Yup.string().max(255).required(i18next.t('Login is required')),
+              password: Yup.string().max(255).required(i18next.t('Password is required'))
             })}
             onSubmit={(values, actions) => {
               console.log('user', values);
@@ -81,23 +83,23 @@ const Login = ({ setToken }: { setToken: any  }) => {
             }) => (
               <form onSubmit={handleSubmit}>
                 <TextField
-                  error={Boolean(touched.email && errors.email)}
+                  error={Boolean(touched.login && errors.login)}
                   fullWidth
-                  helperText={touched.email && errors.email}
-                  label="Email Address"
+                  helperText={touched.login && errors.login}
+                  label={i18next.t("Login")}
                   margin="normal"
-                  name="email"
+                  name="login"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  type="email"
-                  value={values.email}
+                  type="login"
+                  value={values.login}
                   variant="outlined"
                 />
                 <TextField
                   error={Boolean(touched.password && errors.password)}
                   fullWidth
                   helperText={touched.password && errors.password}
-                  label="Password"
+                  label={i18next.t("Password")}
                   margin="normal"
                   name="password"
                   onBlur={handleBlur}
@@ -115,19 +117,9 @@ const Login = ({ setToken }: { setToken: any  }) => {
                     type="submit"
                     variant="contained"
                   >
-                    Sign in now
+                    {i18next.t("Sign in now")}
                   </Button>
                 </Box>
-                <Typography
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  Don&apos;t have an account?
-                  {' '}
-                  <Link component={RouterLink} to="/register" variant="h6" underline="hover">
-                    Sign up
-                  </Link>
-                </Typography>
               </form>
             )}
           </Formik>
